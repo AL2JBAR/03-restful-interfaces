@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Deck {
+  id    String  @id @default(cuid())
+  title String
+  slides Slide[]
+}
+
+model Slide {
+  id     String @id @default(cuid())
+  title  String
+  deckId String
+  deck   Deck   @relation(fields: [deckId], references: [id])
+  cards  Card[]
+}
+
+model Card {
+  id      String   @id @default(cuid())
+  typeId  String
+  type    CardType @relation(fields: [typeId], references: [id])
+  tags    String
+  data    String
+  slideId String
+  slide   Slide    @relation(fields: [slideId], references: [id])
+}
+
+model CardType {
+  id   String @id @default(cuid())
+  type String
+  cards Card[]
+}
